@@ -1,6 +1,6 @@
 # 🚀 NexusJS  
 
-![NexusJS Logo](https://raw.githubusercontent.com/Nathius262/nexusjs/main/logo.png)  ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white) 
+![NexusJS Logo](https://github.com/Nathius262/nexusjs/blob/main/logo.png) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white) 
 
 A lightweight **Express.js framework** with **Sequelize**, **automatic module generation**, **authentication**, and a **CLI** for easy development.  
 
