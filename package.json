@@ -4,7 +4,11 @@
   "description": "A lightweight Express.js framework with Sequelize, automatic module generation, authentication, and a CLI for easy development.",
   "main": "src/core/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm link --local"
+  },
+  "bin": {
+    "nexus": "./bin/nexus-cli.js"
   },
   "repository": {
     "type": "git",
