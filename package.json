@@ -1,0 +1,41 @@
+{
+  "name": "nexusjs",
+  "version": "1.0.0",
+  "description": "A lightweight Express.js framework with Sequelize, automatic module generation, authentication, and a CLI for easy development.",
+  "main": "src/core/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm link --local"
+  },
+  "bin": {
+    "nexus": "./bin/nexus-cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nathius262/nexusjs.git"
+  },
+  "keywords": [
+    "nexusjs",
+    "express.js",
+    "framework"
+  ],
+  "author": "Nathius262",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nathius262/nexusjs/issues"
+  },
+  "homepage": "https://github.com/Nathius262/nexusjs#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "glob": "^11.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "minimist": "^1.2.8",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "sequelize-cli": "^6.6.2"
+  }
+}
