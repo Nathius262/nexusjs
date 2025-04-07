@@ -20,21 +20,66 @@ npm install -g nexusjs
 
 ---
 
-## 🚀 Usage  
-To generate a new module, run:  
-```sh
-nexusjs create <moduleName>
+## 🚀 CLI Usage
+
+NexusJS comes with an intuitive CLI to scaffold modules and boilerplate code.
+
+### 🔧 Create a Full Module
+
+```bash
+nexus make-module <moduleName> -mcrs
+```
+### 🛠️ Options
+
+| Flag      | Description                    |
+|-----------|--------------------------------|
+| `-m`      | Generate model and migration   |
+| `-c`      | Generate controller            |
+| `-r`      | Generate router                |
+| `-s`      | Generate service               |
+| `--admin` | Generate admin version (CRS)   |
+
+
+
+## 📌 Examples
+### Generate a full module:
+```bash
+nexus make-module product -mcrs
 ```
 
-### **Example:**  
-```sh
-nexusjs create product
+### Generate only admin controller, router, and service:
+```bash
+nexus make-module product -crs --admin
 ```
-This will generate a **`product` module** with:  
-- `product.model.js`  
-- `product.controller.js`  
-- `product.routes.js`  
-- `product.service.js`  
+
+### Generate just a controller:
+```bash
+nexus make-controller product
+```
+
+### Generate a controller with admin flag:
+```bash
+nexus make-controller product --admin
+```
+
+## 📁 Output Structure
+
+```mathematica
+src/
+└── modules/
+    └── product/
+        ├── controllers/
+        │   ├── Product.controller.js
+        │   └── admin.Product.controller.js
+        ├── routes/
+        │   ├── Product.routes.js
+        │   └── admin.Product.routes.js
+        ├── services/
+        │   ├── Product.service.js
+        │   └── admin.Product.service.js
+        └── models/
+            └── product.model.js
+```
 
 ---
 
