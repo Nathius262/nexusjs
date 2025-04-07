@@ -26,7 +26,8 @@ const commands = {
 };
 
 if (commands[command]) {
-  require(path.join(__dirname, '../cli/commands', commands[command]))(rawArgs);  // Pass the raw args to the command
+  const commandArgs = rawArgs.slice(1); // Strip off the command itself
+  require(path.join(__dirname, '../cli/commands', commands[command]))(commandArgs);
 } else {
   console.log("❌ Invalid command. Try 'nexus make-model' or 'nexus make-module'");
 }

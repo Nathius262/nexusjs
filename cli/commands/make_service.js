@@ -11,7 +11,7 @@ const ensureDir = (dir) => {
 
 module.exports = function createService(argv) {
   const args = minimist(argv);
-  const moduleName = args._[1];
+  const moduleName = args._[0];
   const isAdmin = args.admin;
 
   if (!moduleName) {
