@@ -9,29 +9,27 @@ const ensureDir = (dir) => {
   }
 };
 
-// Service creation logic
 module.exports = function createService(argv) {
-  // Use minimist to parse the arguments
-  const args = minimist(argv);  // argv is now correctly passed as an array
-
-  // Debug: log the parsed arguments to ensure correct parsing
-  console.log("Parsed arguments:", args);
-
-  const moduleName = args._[1];  // Get the module name from the second positional argument (e.g., 'user')
-  const isAdmin = args.admin;    // Check if the --admin flag is passed
+  const args = minimist(argv);
+  const moduleName = args._[1];
+  const isAdmin = args.admin;
 
   if (!moduleName) {
     console.error("❌ Module name is required. Usage: nexus make-service <moduleName> [--admin]");
     return;
   }
 
-  // Corrected path to the service file
-  const servicePath = path.join(__dirname, `../../src/modules/${moduleName}/services`);
   const modelName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+  const servicePath = path.join(__dirname, `../../src/modules/${moduleName}/services`);
   const serviceFileName = isAdmin ? `admin.${modelName}.service.js` : `${modelName}.service.js`;
   const fullServicePath = path.join(servicePath, serviceFileName);
 
-  // Service template (Admin and regular service will have slightly different logic, e.g., extra methods for admin)
+  // 🛑 Don't overwrite existing file
+  if (fs.existsSync(fullServicePath)) {
+    console.warn(`⚠️  Service already exists at ${fullServicePath}. Skipping creation.`);
+    return;
+  }
+
   const serviceTemplate = isAdmin ? 
   `const { ${modelName} } = require('../models');
 
@@ -85,7 +83,6 @@ exports.delete = async (id) => {
   return await item.destroy();
 };`;
 
-  // Ensure the directory exists and write the service file
   ensureDir(servicePath);
   fs.writeFileSync(fullServicePath, serviceTemplate);
   console.log(`✅ Service created at ${fullServicePath}`);
