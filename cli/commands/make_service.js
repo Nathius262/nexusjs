@@ -31,7 +31,7 @@ module.exports = function createService(argv) {
   }
 
   const serviceTemplate = isAdmin ? 
-  `const { ${modelName} } = require('../models');
+  `const { ${modelName} } = require('../models/${moduleName}');
 
 exports.create = async (data) => {
   return await ${modelName}.create(data);
@@ -61,7 +61,8 @@ exports.adminMethod = async () => {
   // Example of admin-specific logic
   return 'Admin-specific logic here';
 };` : 
-  `const { ${modelName} } = require('../models');
+  `const { ${modelName} } = require('../models/${moduleName}');
+
 
 exports.create = async (data) => {
   return await ${modelName}.create(data);
