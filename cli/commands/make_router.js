@@ -19,7 +19,7 @@ module.exports = function createRouter(argv) {
   }
 
   const modelName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
-  const routerPath = path.join(__dirname, `../../src/modules/${moduleName}/routes`);
+  const routerPath = path.join(process.cwd(), `./src/modules/${moduleName}/routes`);
   const routerFileName = isAdmin ? `admin.${modelName}.routes.js` : `${modelName}.routes.js`;
   const fullRouterPath = path.join(routerPath, routerFileName);
 

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = function loadModules(app) {
-  const modulesPath = path.join(__dirname, '../modules');
+  const modulesPath = path.join(process.cwd(), '../modules');
   const baseApiPath = '/api';
 
   // Read all module folders in /src/modules

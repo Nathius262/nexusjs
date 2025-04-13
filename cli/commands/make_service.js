@@ -20,7 +20,7 @@ module.exports = function createService(argv) {
   }
 
   const modelName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
-  const servicePath = path.join(__dirname, `../../src/modules/${moduleName}/services`);
+  const servicePath = path.join(process.cwd(), `./src/modules/${moduleName}/services`);
   const serviceFileName = isAdmin ? `admin.${modelName}.service.js` : `${modelName}.service.js`;
   const fullServicePath = path.join(servicePath, serviceFileName);
 

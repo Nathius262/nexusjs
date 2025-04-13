@@ -10,7 +10,7 @@ module.exports = function (args) {
     return;
   }
 
-  const modulePath = path.resolve(__dirname, `../../src/modules/${moduleName}`);
+  const modulePath = path.resolve(process.cwd(), `./src/modules/${moduleName}`);
   const modelPath = path.join(modulePath, 'models');
   const migrationPath = path.join(modulePath, 'migrations');
 

@@ -26,7 +26,7 @@ module.exports = function createModule(argv) {
 
   const moduleName = args._[0]; // 'user'
   const isAdmin = args.admin;
-  const modulePath = path.resolve(__dirname, `../../src/modules/${moduleName}`);
+  const modulePath = path.resolve(process.cwd(), `./src/modules/${moduleName}`);
 
   if (!moduleName) {
     console.error("❌ Module name is required. Usage: nexus make-module <moduleName> [-mcrs] [--admin]");

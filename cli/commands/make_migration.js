@@ -10,7 +10,7 @@ module.exports = function (args) {
     return;
   }
 
-  const migrationPath = path.resolve(__dirname, `../../src/modules/${moduleName}/migrations`);
+  const migrationPath = path.resolve(process.cwd(), `./src/modules/${moduleName}/migrations`);
 
   // Ensure migrations folder exists
   if (!fs.existsSync(migrationPath)) {

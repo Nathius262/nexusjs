@@ -10,7 +10,7 @@ module.exports = function (args) {
     return;
   }
 
-  const seederPath = path.resolve(__dirname, `../../src/modules/${moduleName}/seeders`);
+  const seederPath = path.resolve(process.cwd(), `./src/modules/${moduleName}/seeders`);
 
   // Ensure seeders folder exists
   if (!fs.existsSync(seederPath)) {

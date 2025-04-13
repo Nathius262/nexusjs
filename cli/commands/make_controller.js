@@ -19,7 +19,7 @@ module.exports = function createController(argv) {
   }
 
   const modelName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
-  const controllerPath = path.join(__dirname, `../../src/modules/${moduleName}/controllers`);
+  const controllerPath = path.join(process.cwd(), `./src/modules/${moduleName}/controllers`);
   const controllerFileName = isAdmin ? `admin.${modelName}.controller.js` : `${modelName}.controller.js`;
   const fullControllerPath = path.join(controllerPath, controllerFileName);
 
