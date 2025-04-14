@@ -1,0 +1,32 @@
+name: 📦 Publish @nathius262/nexusjs to npm
+
+on:
+  push:
+    tags:
+      - 'v*'  # Runs only when a version tag is pushed (e.g. v1.0.0)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout source code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: ✅ Run tests (optional)
+        run: npm test
+        continue-on-error: true  # Remove if you want to enforce test pass before publish
+
+      - name: 🚀 Publish @nathius262/nexusjs to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
