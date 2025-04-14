@@ -5,7 +5,6 @@
   "main": "src/core/server.js",
   "scripts": {
     "test": "jest",
-    "postinstall": "npm link --local",
     "start": "node ./src/core/server.js",
     "dev": "nodemon ./src/core/server.js"
   },
