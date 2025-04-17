@@ -15,10 +15,6 @@
     "type": "git",
     "url": "git+https://github.com/Nathius262/nexusjs.git"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "keywords": [
     "nexusjs",
     "express.js",
