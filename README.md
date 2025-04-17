@@ -13,9 +13,9 @@ A lightweight **Express.js framework** with **Sequelize**, **automatic module ge
 ---
 
 ## 📥 Installation  
-Install globally using NPM:  
+Install using NPM:  
 ```sh
-npm install -g nexusjs
+npm i @nathius262/nexusjs
 ```
 
 ---
