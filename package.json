@@ -11,6 +11,9 @@
   "bin": {
     "nexus": "bin/nexus-cli.js"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nathius262/nexusjs.git"
