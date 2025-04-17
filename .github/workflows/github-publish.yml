@@ -3,30 +3,30 @@ name: 📦 Publish to GitHub Packages
 on:
   push:
     tags:
-      - 'v*' # Run only when a tag like v0.1.0 is pushed
+      - 'v*'
 
 jobs:
-  publish-gpr:
+  publish-github:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: ⬇️ Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node
+      - name: Setup Node.js for GitHub Packages
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://npm.pkg.github.com/'
+          scope: '@nathius262'
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: ✅ Run tests
-        run: npm test
-        continue-on-error: true
-
-      - name: 🚀 Publish to GitHub Packages
-        run: npm publish
+      - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish

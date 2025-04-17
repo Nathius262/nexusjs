@@ -1,32 +1,28 @@
-name: 📦 Publish to npm
+name: 🚀 Publish to npm Registry
 
 on:
   push:
     tags:
-      - 'v*' # Run only when a tag like v0.1.0 is pushed
+      - 'v*'
 
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node
+      - name: Setup Node.js for npm
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: ✅ Run tests
-        run: npm test
-        continue-on-error: true
-
-      - name: 🚀 Publish to npm
-        run: npm publish --access public
+      - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
