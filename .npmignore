@@ -1,2 +1,5 @@
 node_modules/
 __test__/
+.npmrc.github
+.npmrc.npm
+.npmrc
