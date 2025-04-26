@@ -1,42 +1,41 @@
-'use strict';
-
+const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
+const configFile = require('../core/sequelize.config'); // Adjust based on your config
+
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../core/sequelize.config.js')[env];
+const env = process.env.NODE_ENV;
+const config = configFile[env];
+
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// Initialize Sequelize
+const sequelize = new Sequelize(config.database, config.username, config.password, config,
+  {define: {
+    underscored: false, // Disable automatic snake_case conversion
+  },}
+);
 
-fs
-  .readdirSync(__dirname)
+const modelFiles = fs.readdirSync(__dirname)
   .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.endsWith('.cjs') || file.endsWith('.js'));
   });
 
+
+// Load models
+modelFiles.forEach(file => {
+  const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+  db[model.name] = model; // Store the model in the db object
+});
+
+// Setup associations if any
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
+// Add sequelize and Sequelize to the db object
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
