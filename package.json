@@ -29,18 +29,20 @@
   "homepage": "https://github.com/Nathius262/nexusjs#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "glob": "^11.0.1",
     "jsonwebtoken": "^9.0.2",
     "minimist": "^1.2.8",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "umzug": "^3.8.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "mock-fs": "^5.5.0",
     "node-mocks-http": "^1.16.2",
     "nodemon": "^3.1.9",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "sqlite3": "^5.1.7"
   }
 }
