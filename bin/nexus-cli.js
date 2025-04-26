@@ -34,7 +34,9 @@ const commands = {
   "make-seeder": "make_seeder.js",
   "make-service": "make_service.js",
   "make-router": "make_router.js",
-  "make-controller": "make_controller.js"
+  "make-controller": "make_controller.js",
+  "migrations": "migration.js",
+  "migrations-debug": "migration_debug.js"
 };
 
 // Route to the appropriate command handler
