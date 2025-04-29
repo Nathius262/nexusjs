@@ -1,13 +1,14 @@
 const fs = require('fs-extra');
 const path = require('path');
-const ora = require('ora');
-const chalk = require('chalk');
 
 module.exports = async function (args, command) {
-  const spinner = ora('Setting up project...').start();
+  const { default: ora } = await import('ora'); 
+  const { default: chalk } = await import('chalk');
+
+  const spinner = ora('Creating project...').start();
 
   try {
-    const projectName = command === 'create-project' ? args[0] : '.'; // if init, current dir
+    const projectName = command === 'create-project' ? args[0] : '.'; // Use current directory for 'init'
 
     if (!projectName) {
       spinner.fail(chalk.red('Please specify a project name.'));
@@ -16,7 +17,7 @@ module.exports = async function (args, command) {
     }
 
     const targetPath = path.resolve(process.cwd(), projectName);
-    const templatePath = path.resolve(__dirname, '../../template');
+    const templatePath = path.resolve(__dirname, '../../templates');
 
     await fs.copy(templatePath, targetPath);
 
