@@ -38,6 +38,7 @@
     "minimist": "^1.2.8",
     "ora": "^8.2.0",
     "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
     "umzug": "^3.8.2"
   },
   "devDependencies": {
@@ -45,7 +46,6 @@
     "mock-fs": "^5.5.0",
     "node-mocks-http": "^1.16.2",
     "nodemon": "^3.1.9",
-    "sequelize-cli": "^6.6.2",
     "sqlite3": "^5.1.7"
   }
 }
