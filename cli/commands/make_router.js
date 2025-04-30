@@ -23,7 +23,6 @@ module.exports = function createRouter(argv) {
   const routerFileName = isAdmin ? `admin.${modelName}.routes.js` : `${modelName}.routes.js`;
   const fullRouterPath = path.join(routerPath, routerFileName);
 
-  // 🚫 Check if the file already exists
   if (fs.existsSync(fullRouterPath)) {
     console.warn(`⚠️  Router already exists at ${fullRouterPath}. Skipping creation.`);
     return;
@@ -33,19 +32,37 @@ module.exports = function createRouter(argv) {
     ? `const controller = require('../controllers/admin.${modelName}.controller');`
     : `const controller = require('../controllers/${modelName}.controller');`;
 
-  const template =
-`${controllerImport}
-const express = require('express');
-const router = express.Router();
+  const adminRoutes = `
+    ${controllerImport}
+    const express = require('express');
+    const router = express.Router();
 
-router.post('/', controller.create);
+    // Admin routes
+    router.post('/', controller.create);
+    router.get('/', controller.findAll);
+    router.get('/:id', controller.findById);
+    router.put('/:id', controller.update);
+    router.delete('/:id', controller.delete);
+    router.get('/dashboard', controller.adminDashboard);
 
-${isAdmin ? `router.get('/dashboard', controller.adminDashboard);` : ''}
+    module.exports = router;
+  `;
 
-module.exports = router;
+  const normalRoutes = `
+  ${controllerImport}
+  const express = require('express');
+  const router = express.Router();
+
+  // Public routes
+  router.get('/', controller.findAll);
+  router.get('/:id', controller.findById);
+
+  module.exports = router;
 `;
 
+  const template = isAdmin ? adminRoutes : normalRoutes;
+
   ensureDir(routerPath);
-  fs.writeFileSync(fullRouterPath, template);
+  fs.writeFileSync(fullRouterPath, template.trim());
   console.log(`✅ Router created at ${fullRouterPath}`);
 };

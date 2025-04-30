@@ -23,7 +23,6 @@ module.exports = function createController(argv) {
   const controllerFileName = isAdmin ? `admin.${modelName}.controller.js` : `${modelName}.controller.js`;
   const fullControllerPath = path.join(controllerPath, controllerFileName);
 
-  // 🚫 Check if controller already exists
   if (fs.existsSync(fullControllerPath)) {
     console.warn(`⚠️  Controller already exists at ${fullControllerPath}. Skipping creation.`);
     return;
@@ -33,8 +32,8 @@ module.exports = function createController(argv) {
     ? `const service = require('../services/admin.${modelName}.service');`
     : `const service = require('../services/${modelName}.service');`;
 
-  const template =
-`${serviceImport}
+  const adminTemplate = `
+${serviceImport}
 
 exports.create = async (req, res) => {
   try {
@@ -45,14 +44,77 @@ exports.create = async (req, res) => {
   }
 };
 
-${isAdmin ? `
-exports.adminDashboard = async (req, res) => {
-  // Example admin controller method
-  res.json({ message: "Welcome to admin dashboard" });
+exports.findAll = async (req, res) => {
+  try {
+    const data = await service.findAll();
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
-` : ''}`;
+
+exports.findById = async (req, res) => {
+  try {
+    const data = await service.findById(req.params.id);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const data = await service.update(req.params.id, req.body);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const data = await service.delete(req.params.id);
+    res.status(200).json({ message: 'Deleted successfully', data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.adminDashboard = async (req, res) => {
+  try {
+    const data = await service.adminMethod();
+    res.status(200).json({ message: data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+`;
+
+  const normalTemplate = `
+${serviceImport}
+
+exports.findAll = async (req, res) => {
+  try {
+    const data = await service.findAll();
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.findById = async (req, res) => {
+  try {
+    const data = await service.findById(req.params.id);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+};
+`;
+
+  const template = isAdmin ? adminTemplate : normalTemplate;
 
   ensureDir(controllerPath);
-  fs.writeFileSync(fullControllerPath, template);
+  fs.writeFileSync(fullControllerPath, template.trim());
   console.log(`✅ Controller created at ${fullControllerPath}`);
 };

@@ -24,64 +24,81 @@ module.exports = function createService(argv) {
   const serviceFileName = isAdmin ? `admin.${modelName}.service.js` : `${modelName}.service.js`;
   const fullServicePath = path.join(servicePath, serviceFileName);
 
-  // 🛑 Don't overwrite existing file
   if (fs.existsSync(fullServicePath)) {
     console.warn(`⚠️  Service already exists at ${fullServicePath}. Skipping creation.`);
     return;
   }
 
-  const serviceTemplate = isAdmin ? 
-  `const { ${modelName} } = require('../models/${moduleName}');
+  const serviceTemplate = isAdmin
+    ? `const { ${modelName} } = require('../models/${moduleName}');
 
 exports.create = async (data) => {
-  return await ${modelName}.create(data);
+  try {
+    return await ${modelName}.create(data);
+  } catch (error) {
+    throw new Error('Error creating record: ' + error.message);
+  }
 };
 
 exports.findAll = async () => {
-  return await ${modelName}.findAll();
+  try {
+    return await ${modelName}.findAll();
+  } catch (error) {
+    throw new Error('Error fetching records: ' + error.message);
+  }
 };
 
 exports.findById = async (id) => {
-  return await ${modelName}.findByPk(id);
+  try {
+    const item = await ${modelName}.findByPk(id);
+    if (!item) throw new Error('Not found');
+    return item;
+  } catch (error) {
+    throw new Error('Error fetching record: ' + error.message);
+  }
 };
 
 exports.update = async (id, data) => {
-  const item = await ${modelName}.findByPk(id);
-  if (!item) throw new Error('Not found');
-  return await item.update(data);
+  try {
+    const item = await ${modelName}.findByPk(id);
+    if (!item) throw new Error('Not found');
+    return await item.update(data);
+  } catch (error) {
+    throw new Error('Error updating record: ' + error.message);
+  }
 };
 
 exports.delete = async (id) => {
-  const item = await ${modelName}.findByPk(id);
-  if (!item) throw new Error('Not found');
-  return await item.destroy();
+  try {
+    const item = await ${modelName}.findByPk(id);
+    if (!item) throw new Error('Not found');
+    return await item.destroy();
+  } catch (error) {
+    throw new Error('Error deleting record: ' + error.message);
+  }
 };
 
 exports.adminMethod = async () => {
-  // Example of admin-specific logic
   return 'Admin-specific logic here';
-};` : 
-  `const { ${modelName} } = require('../models/${moduleName}');
+};`
+    : `const { ${modelName} } = require('../models/${moduleName}');
 
-
-exports.create = async (data) => {
-  return await ${modelName}.create(data);
+exports.findAll = async () => {
+  try {
+    return await ${modelName}.findAll();
+  } catch (error) {
+    throw new Error('Error fetching records: ' + error.message);
+  }
 };
 
 exports.findById = async (id) => {
-  return await ${modelName}.findByPk(id);
-};
-
-exports.update = async (id, data) => {
-  const item = await ${modelName}.findByPk(id);
-  if (!item) throw new Error('Not found');
-  return await item.update(data);
-};
-
-exports.delete = async (id) => {
-  const item = await ${modelName}.findByPk(id);
-  if (!item) throw new Error('Not found');
-  return await item.destroy();
+  try {
+    const item = await ${modelName}.findByPk(id);
+    if (!item) throw new Error('Not found');
+    return item;
+  } catch (error) {
+    throw new Error('Error fetching record: ' + error.message);
+  }
 };`;
 
   ensureDir(servicePath);
