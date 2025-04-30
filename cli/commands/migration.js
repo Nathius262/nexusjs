@@ -24,7 +24,10 @@ const { Sequelize } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
 const glob = require('glob');
 const minimist = require('minimist');
-const configFile = require('../../src/core/sequelize.config');
+const path = require('path');
+const configFilePath = path.resolve(process.cwd(), 'src/core/sequelize.config.js');
+const configFile = require(configFilePath);
+
 
 module.exports = async function (rawArgs) {
   const args = minimist(rawArgs);
