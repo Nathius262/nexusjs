@@ -1,6 +1,6 @@
-const makeController = require('./make_controller');
-const makeRouter = require('./make_router');
-const makeService = require('./make_service');
+const makeController = require('./make_controller.cjs');
+const makeRouter = require('./make_router.cjs');
+const makeService = require('./make_service.cjs');
 
 module.exports = function makeAdmin(argv) {
     const args = require('minimist')(argv);
