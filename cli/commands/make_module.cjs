@@ -3,11 +3,11 @@ const fs = require('fs');
 const minimist = require('minimist');
 
 // Import command modules
-const makeModel = require('./make_model');
-const makeController = require('./make_controller');
-const makeRouter = require('./make_router');
-const makeService = require('./make_service');
-const makeAdmin = require('./make_admin'); // <-- new
+const makeModel = require('./make_model.cjs');
+const makeController = require('./make_controller.cjs');
+const makeRouter = require('./make_router.cjs');
+const makeService = require('./make_service.cjs');
+const makeAdmin = require('./make_admin.cjs'); // <-- new
 
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
