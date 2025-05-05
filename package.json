@@ -13,9 +13,9 @@
     "require": "./dist/cjs/index.js",
     "import": "./dist/esm/index.js"
   },
-  "type": "module",
+  "type": "commonjs",
   "bin": {
-    "nexus": "./dist/nexus-cli.cjs"
+    "nexus": "./dist/nexus-cli.js"
   },
   "repository": {
     "type": "git",
