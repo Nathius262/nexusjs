@@ -24,7 +24,7 @@ const { Sequelize } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
 const glob = require('glob');
 const minimist = require('minimist');
-const configFilePath = path.resolve(process.cwd(), 'src/core/sequelize.config.js');
+const configFilePath = path.resolve(process.cwd(), 'src/core/sequelize.config.cjs');
 const configFile = require(configFilePath);
 
 
@@ -40,7 +40,7 @@ module.exports = async function (rawArgs) {
   // ✨ Build a cross-platform migration glob
   const migrationGlob = path.posix.join(
     process.cwd().replace(/\\/g, '/'),
-    'src/modules/**/migrations/*.js'
+    'src/modules/**/migrations/*.cjs'
   );
 
   const umzug = new Umzug({
