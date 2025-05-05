@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const configFile = require('../core/sequelize.config'); // Adjust based on your config
+const configFile = require('../core/sequelize.config.cjs'); // Adjust based on your config
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV;
