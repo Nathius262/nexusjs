@@ -51,17 +51,17 @@ async function main() {
   };
 
   const commands: CommandType = {
-    "make-module": "make_module.js",
-    "make-model": "make_model.js",
-    "make-migration": "make_migration.js",
-    "make-seeder": "make_seeder.js",
-    "make-service": "make_service.js",
-    "make-router": "make_router.js",
-    "make-controller": "make_controller.js",
-    migrations: "migration.js",
-    "migrations-debug": "migration_debug.js",
-    "create-project": "create_project.js",
-    init: "create_project.js"
+    "make-module": "make_module.cjs",
+    "make-model": "make_model.cjs",
+    "make-migration": "make_migration.cjs",
+    "make-seeder": "make_seeder.cjs",
+    "make-service": "make_service.cjs",
+    "make-router": "make_router.cjs",
+    "make-controller": "make_controller.cjs",
+    migrations: "migration.cjs",
+    "migrations-debug": "migration_debug.cjs",
+    "create-project": "create_project.cjs",
+    init: "create_project.cjs"
   };
 
   const rawArgs = process.argv.slice(2);
