@@ -1,12 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const minimist = require('minimist');
+const { isESModuleProject, getServiceSyntaxHelpers } = require('../utils/codegen_helpers.cjs');
 
-// Helper function to create directories if they don't exist
 const ensureDir = (dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
 module.exports = function createService(argv) {
@@ -29,36 +27,19 @@ module.exports = function createService(argv) {
     return;
   }
 
-  const serviceTemplate = isAdmin
-    ? `const { ${modelName} } = require('../models/${moduleName}');
+  const isModule = isESModuleProject();
+  const { importStatement, exportFn } = getServiceSyntaxHelpers({ isESM: isModule, modelName, moduleName });
 
-exports.create = async (data) => {
+  const adminMethods = isAdmin
+    ? [
+        exportFn('create', `async (data) => {
   try {
     return await ${modelName}.create(data);
   } catch (error) {
     throw new Error('Error creating record: ' + error.message);
   }
-};
-
-exports.findAll = async () => {
-  try {
-    return await ${modelName}.findAll();
-  } catch (error) {
-    throw new Error('Error fetching records: ' + error.message);
-  }
-};
-
-exports.findById = async (id) => {
-  try {
-    const item = await ${modelName}.findByPk(id);
-    if (!item) throw new Error('Not found');
-    return item;
-  } catch (error) {
-    throw new Error('Error fetching record: ' + error.message);
-  }
-};
-
-exports.update = async (id, data) => {
+}`),
+        exportFn('update', `async (id, data) => {
   try {
     const item = await ${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
@@ -66,9 +47,8 @@ exports.update = async (id, data) => {
   } catch (error) {
     throw new Error('Error updating record: ' + error.message);
   }
-};
-
-exports.delete = async (id) => {
+}`),
+        exportFn('delete', `async (id) => {
   try {
     const item = await ${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
@@ -76,22 +56,22 @@ exports.delete = async (id) => {
   } catch (error) {
     throw new Error('Error deleting record: ' + error.message);
   }
-};
-
-exports.adminMethod = async () => {
+}`),
+        exportFn('adminMethod', `async () => {
   return 'Admin-specific logic here';
-};`
-    : `const { ${modelName} } = require('../models/${moduleName}');
+}`),
+      ]
+    : [];
 
-exports.findAll = async () => {
+  const commonMethods = [
+    exportFn('findAll', `async () => {
   try {
     return await ${modelName}.findAll();
   } catch (error) {
     throw new Error('Error fetching records: ' + error.message);
   }
-};
-
-exports.findById = async (id) => {
+}`),
+    exportFn('findById', `async (id) => {
   try {
     const item = await ${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
@@ -99,9 +79,12 @@ exports.findById = async (id) => {
   } catch (error) {
     throw new Error('Error fetching record: ' + error.message);
   }
-};`;
+}`),
+  ];
+
+  const serviceTemplate = [importStatement, '', ...commonMethods, ...adminMethods].join('\n\n');
 
   ensureDir(servicePath);
-  fs.writeFileSync(fullServicePath, serviceTemplate);
+  fs.writeFileSync(fullServicePath, serviceTemplate.trimStart());
   console.log(`✅ Service created at ${fullServicePath}`);
 };

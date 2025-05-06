@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const minimist = require('minimist');
+const { isESModuleProject, getRouterSyntaxHelpers } = require('../utils/codegen_helpers.cjs');
 
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) {
@@ -28,41 +29,46 @@ module.exports = function createRouter(argv) {
     return;
   }
 
-  const controllerImport = isAdmin
-    ? `const controller = require('../controllers/admin.${modelName}.controller');`
-    : `const controller = require('../controllers/${modelName}.controller');`;
+  const isModule = isESModuleProject();
+  const { importExpress, importController, routerExport } = getRouterSyntaxHelpers(isModule);
+
+  const controllerPath = isAdmin
+    ? `../controllers/admin.${modelName}.controller`
+    : `../controllers/${modelName}.controller`;
 
   const adminRoutes = `
-    ${controllerImport}
-    const express = require('express');
-    const router = express.Router();
+${importExpress}
+${importController(controllerPath)}
 
-    // Admin routes
-    router.post('/', controller.create);
-    router.get('/', controller.findAll);
-    router.get('/:id', controller.findById);
-    router.put('/:id', controller.update);
-    router.delete('/:id', controller.delete);
-    router.get('/dashboard', controller.adminDashboard);
+const router = express.Router();
 
-    module.exports = router;
-  `;
+// Admin routes
+router.post('/', controller.create);
+router.get('/', controller.findAll);
+router.get('/:id', controller.findById);
+router.put('/:id', controller.update);
+router.delete('/:id', controller.delete);
+router.get('/dashboard', controller.adminDashboard);
+
+${routerExport('router')}
+`;
 
   const normalRoutes = `
-  ${controllerImport}
-  const express = require('express');
-  const router = express.Router();
+${importExpress}
+${importController(controllerPath)}
 
-  // Public routes
-  router.get('/', controller.findAll);
-  router.get('/:id', controller.findById);
+const router = express.Router();
 
-  module.exports = router;
+// Public routes
+router.get('/', controller.findAll);
+router.get('/:id', controller.findById);
+
+${routerExport('router')}
 `;
 
   const template = isAdmin ? adminRoutes : normalRoutes;
 
   ensureDir(routerPath);
-  fs.writeFileSync(fullRouterPath, template.trim());
+  fs.writeFileSync(fullRouterPath, template.trimStart());
   console.log(`✅ Router created at ${fullRouterPath}`);
 };

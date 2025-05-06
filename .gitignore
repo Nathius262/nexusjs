@@ -142,3 +142,4 @@ dist
 ./src/
 db_test.sqlite
 db.sqlite
+./src/modules/
