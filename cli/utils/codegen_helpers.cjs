@@ -63,12 +63,15 @@ function getRouterSyntaxHelpers(isModule) {
     };
 }
   
-  
+async function loadModule(filePath, isModule) {
+  return isModule ? (await import(filePath)).default : require(filePath);
+}
 
 module.exports = {
     isESModuleProject,
     getControllerSyntaxHelpers,
     getServiceSyntaxHelpers,
     getRouterSyntaxHelpers,
+    loadModule,
   };
   

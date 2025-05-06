@@ -1,33 +1,39 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function loadModules(app) {
-  const modulesPath = path.join(process.cwd(), '../modules');
-  const baseApiPath = '/api';
+// Require from @nathius/nexus package
+const { isESModuleProject, loadModule } = require('@nathius/nexus/cli/utils/codegen_helpers');
 
-  // Read all module folders in /src/modules
+module.exports = async function loadModules(app) {
+  const modulesPath = path.join(process.cwd(), 'src/modules');
+  const baseApiPath = '/api';
+  const isModule = isESModuleProject();
+
   const modules = fs.readdirSync(modulesPath, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
     .map(dirent => dirent.name);
 
-  modules.forEach(moduleName => {
+  for (const moduleName of modules) {
     const routesDir = path.join(modulesPath, moduleName, 'routes');
-
-    if (!fs.existsSync(routesDir)) return;
+    if (!fs.existsSync(routesDir)) continue;
 
     const routeFiles = fs.readdirSync(routesDir)
       .filter(file => file.endsWith('.routes.js'));
 
-    routeFiles.forEach(file => {
+    for (const file of routeFiles) {
       const isAdmin = file.startsWith('admin.');
       const routePath = isAdmin
         ? `${baseApiPath}/admin/${moduleName}`
         : `${baseApiPath}/${moduleName}`;
 
-      const routeModule = require(path.join(routesDir, file));
-      app.use(routePath, routeModule);
+      const fullPath = path.join(routesDir, file);
+      const modulePath = isModule
+        ? `file://${fullPath}` // Needed for import()
+        : fullPath;
 
+      const routeModule = await loadModule(modulePath, isModule);
+      app.use(routePath, routeModule);
       console.log(`✅ Loaded ${isAdmin ? 'admin' : 'public'} route: ${routePath}`);
-    });
-  });
+    }
+  }
 };
