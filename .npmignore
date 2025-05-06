@@ -5,3 +5,28 @@ __test__/
 .npmrc
 db_test.sqlite
 db.sqlite
+
+
+# Exclude source code (not needed in the npm package)
+src/
+
+# Exclude TypeScript build configs (you don't want to include these)
+tsconfig.json
+tsup.config.ts
+
+# Exclude test files and folders (they are not needed for production)
+tests/
+test/
+
+# Exclude git-related files and folders (not required for consumers)
+.git/
+.gitignore
+
+# Exclude logs (they aren't useful for consumers)
+*.log
+
+# Optional: Exclude other dev-related files that aren't necessary for consumers
+.vscode/
+.idea/
+.nvmrc
+
