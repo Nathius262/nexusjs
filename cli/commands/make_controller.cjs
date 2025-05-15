@@ -3,7 +3,6 @@ const fs = require('fs');
 const minimist = require('minimist');
 const { isESModuleProject, getControllerSyntaxHelpers } = require('../utils/codegen_helpers.cjs');
 
-
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -38,79 +37,84 @@ module.exports = function createController(argv) {
 
   const methods = [];
 
+  // Shared for both admin and public
+  methods.push(
+    exportFunction('findAll', `async (req, res) => {
+  try {
+    const data = await service.findAll();
+    res.status(200).render('${isAdmin ? './admins/list' : './list'}', {
+      success: true,
+      pageTitle: "${isAdmin ? 'Admin' : ''}",
+      ${moduleName}s: data,
+    });
+  } catch (err) {
+    res.status(500).render('error', { error: err.message });
+  }
+}`),
+
+    exportFunction('findById', `async (req, res) => {
+  try {
+    const data = await service.findById(req.params.id);
+    res.status(200).render('${isAdmin ? './admins/update' : './single'}', {
+      success: true,
+      pageTitle: "${isAdmin ? 'Update Record' : 'Details'}",
+      ${moduleName}: [data],
+    });
+  } catch (err) {
+    res.status(404).render('error', { error: err.message });
+  }
+}`)
+  );
+
   if (isAdmin) {
+    // Only for admin
     methods.push(
       exportFunction('create', `async (req, res) => {
   try {
     const data = await service.create(req.body);
-    res.status(201).json(data);
+    res.status(201).json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-}`),
-
-      exportFunction('findAll', `async (req, res) => {
-  try {
-    const data = await service.findAll();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}`),
-
-      exportFunction('findById', `async (req, res) => {
-  try {
-    const data = await service.findById(req.params.id);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(404).json({ error: err.message });
   }
 }`),
 
       exportFunction('update', `async (req, res) => {
   try {
     const data = await service.update(req.params.id, req.body);
-    res.status(200).json(data);
+    res.status(200).json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }`),
 
-      exportFunction('delete', `async (req, res) => {
+      exportFunction('destroy', `async (req, res) => {
   try {
-    const data = await service.delete(req.params.id);
-    res.status(200).json({ message: 'Deleted successfully', data });
+    const data = await service.destroy(req.params.id);
+    res.status(200).json({ success: true, message: 'Deleted successfully', data });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}`),
+
+      exportFunction('renderCreate', `async (req, res) => {
+  try {
+    res.status(200).render('./admins/create', {
+      pageTitle: "Create ${modelName}"
+    });
+  } catch (err) {
+    res.status(500).render('error', { error: err.message });
   }
 }`),
 
       exportFunction('adminDashboard', `async (req, res) => {
   try {
     const data = await service.adminMethod();
-    res.status(200).json({ message: data });
+    res.status(200).render('./admins/dashboard', {
+      pageTitle: "Admin Dashboard",
+      data,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}`)
-    );
-  } else {
-    methods.push(
-      exportFunction('findAll', `async (req, res) => {
-  try {
-    const data = await service.findAll();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}`),
-
-      exportFunction('findById', `async (req, res) => {
-  try {
-    const data = await service.findById(req.params.id);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(404).json({ error: err.message });
+    res.status(500).render('error', { error: err.message });
   }
 }`)
     );

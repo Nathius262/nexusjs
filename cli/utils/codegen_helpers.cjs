@@ -30,8 +30,10 @@ function getControllerSyntaxHelpers(isModule) {
   
 function getServiceSyntaxHelpers({ isESM, modelName, moduleName }) {
     const importStatement = isESM
-        ? `import { ${modelName} } from '../models/${moduleName}.js';`
-        : `const { ${modelName} } = require('../models/${moduleName}');`;
+
+
+        ? `import db from '../../../models/index.cjs';`
+        : `const db = require('../../../models/index.cjs');`;
 
     const exportFn = (fnName, fnBody) =>
         isESM

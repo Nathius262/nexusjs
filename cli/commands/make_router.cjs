@@ -13,15 +13,19 @@ module.exports = function createRouter(argv) {
   const args = minimist(argv);
   const moduleName = args._[0];
   const isAdmin = args.admin;
+  const isApi = args.api;
 
   if (!moduleName) {
-    console.error("❌ Module name is required. Usage: nexus make-router <moduleName> [--admin]");
+    console.error("❌ Module name is required. Usage: nexus make-router <moduleName> [--admin] [--api]");
     return;
   }
 
   const modelName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
-  const routerPath = path.join(process.cwd(), `./src/modules/${moduleName}/routes`);
-  const routerFileName = isAdmin ? `admin.${modelName}.routes.js` : `${modelName}.routes.js`;
+  const subDir = isApi ? 'api' : '';
+  const routerPath = path.join(process.cwd(), `./src/modules/${moduleName}/routes`, subDir);
+  const prefix = isApi ? (isAdmin ? 'admin.' : '') : (isAdmin ? 'admin.' : '');
+  const suffix = isApi ? '.api.routes.js' : '.routes.js';
+  const routerFileName = `${prefix}${modelName}${suffix}`;
   const fullRouterPath = path.join(routerPath, routerFileName);
 
   if (fs.existsSync(fullRouterPath)) {
@@ -32,9 +36,28 @@ module.exports = function createRouter(argv) {
   const isModule = isESModuleProject();
   const { importExpress, importController, routerExport } = getRouterSyntaxHelpers(isModule);
 
-  const controllerPath = isAdmin
-    ? `../controllers/admin.${modelName}.controller`
-    : `../controllers/${modelName}.controller`;
+  const controllerPath = isApi
+    ? `../controllers/api/${prefix}${modelName}.controller`
+    : `../controllers/${prefix}${modelName}.controller`;
+
+  const apiRoutes = `
+${importExpress}
+${importController(controllerPath)}
+
+const router = express.Router();
+
+// API routes
+router.route('/')
+  .get(controller.findAll)
+  .post(controller.create);
+
+router.route('/:id')
+  .get(controller.findById)
+  .put(controller.update)
+  .delete(controller.destroy);
+
+${routerExport('router')}
+`;
 
   const adminRoutes = `
 ${importExpress}
@@ -42,31 +65,36 @@ ${importController(controllerPath)}
 
 const router = express.Router();
 
-// Admin routes
-router.post('/', controller.create);
-router.get('/', controller.findAll);
-router.get('/:id', controller.findById);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.delete);
+// Admin view routes
+router.route('/')
+  .get(controller.findAll)
+  .post(controller.create);
+
+router.get('/create', controller.renderCreate);
 router.get('/dashboard', controller.adminDashboard);
+
+router.route('/:id')
+  .get(controller.findById)
+  .put(controller.update)
+  .delete(controller.destroy);
 
 ${routerExport('router')}
 `;
 
-  const normalRoutes = `
+  const publicRoutes = `
 ${importExpress}
 ${importController(controllerPath)}
 
 const router = express.Router();
 
-// Public routes
+// Public view routes
 router.get('/', controller.findAll);
 router.get('/:id', controller.findById);
 
 ${routerExport('router')}
 `;
 
-  const template = isAdmin ? adminRoutes : normalRoutes;
+  const template = isApi ? apiRoutes : (isAdmin ? adminRoutes : publicRoutes);
 
   ensureDir(routerPath);
   fs.writeFileSync(fullRouterPath, template.trimStart());

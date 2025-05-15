@@ -7,7 +7,8 @@ const makeModel = require('./make_model.cjs');
 const makeController = require('./make_controller.cjs');
 const makeRouter = require('./make_router.cjs');
 const makeService = require('./make_service.cjs');
-const makeAdmin = require('./make_admin.cjs'); // <-- new
+const makeAdmin = require('./make_admin.cjs');
+const makeApiController = require('./make_api_controller.cjs');
 
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -26,6 +27,7 @@ module.exports = function createModule(argv) {
 
   const moduleName = args._[0]; // 'user'
   const isAdmin = args.admin;
+  const isApi = args.api;
   const modulePath = path.resolve(process.cwd(), `./src/modules/${moduleName}`);
 
   if (!moduleName) {
@@ -55,13 +57,26 @@ module.exports = function createModule(argv) {
 
   if (args.c) {
     console.log(`🧠 Generating controller`);
-    makeController([moduleName, ...(isAdmin ? ['--admin'] : [])]);
+    const controllerArgs = [moduleName];
+    if (isAdmin) controllerArgs.push('--admin');
+    if (isApi) controllerArgs.push('--api');
+
+    if (isApi) {
+      makeApiController(controllerArgs);
+    } else {
+      makeController(controllerArgs);
+    }
   }
-  
+
   if (args.r) {
     console.log(`🌐 Generating router`);
-    makeRouter([moduleName, ...(isAdmin ? ['--admin'] : [])]);
+    const routerArgs = [moduleName];
+    if (isAdmin) routerArgs.push('--admin');
+    if (isApi) routerArgs.push('--api');
+
+    makeRouter(routerArgs);
   }
+
   
   if (args.s) {
     console.log(`⚙️ Generating service`);

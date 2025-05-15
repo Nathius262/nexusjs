@@ -48,7 +48,7 @@ module.exports = function createService(argv) {
     throw new Error('Error updating record: ' + error.message);
   }
 }`),
-        exportFn('delete', `async (id) => {
+        exportFn('destroy', `async (id) => {
   try {
     const item = await ${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
