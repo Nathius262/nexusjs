@@ -105,18 +105,6 @@ module.exports = function createController(argv) {
     res.status(500).render('error', { error: err.message });
   }
 }`),
-
-      exportFunction('adminDashboard', `async (req, res) => {
-  try {
-    const data = await service.adminMethod();
-    res.status(200).render('./admins/dashboard', {
-      pageTitle: "Admin Dashboard",
-      data,
-    });
-  } catch (err) {
-    res.status(500).render('error', { error: err.message });
-  }
-}`)
     );
   }
 

@@ -57,9 +57,6 @@ module.exports = function createService(argv) {
     throw new Error('Error deleting record: ' + error.message);
   }
 }`),
-        exportFn('adminMethod', `async () => {
-  return 'Admin-specific logic here';
-}`),
       ]
     : [];
 

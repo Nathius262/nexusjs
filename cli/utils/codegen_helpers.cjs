@@ -52,6 +52,10 @@ function getRouterSyntaxHelpers(isModule) {
       importExpress: isModule
         ? `import express from 'express';`
         : `const express = require('express');`,
+
+      importUseModuleViews: isModule
+        ? `import userModuleViews from '../../../middlewares/moduleViews.js';`
+        : `const userModuleViews = require('../../../middlewares/moduleViews.js');`,
   
       importController: (controllerPath) =>
         isModule

@@ -34,7 +34,7 @@ module.exports = function createRouter(argv) {
   }
 
   const isModule = isESModuleProject();
-  const { importExpress, importController, routerExport } = getRouterSyntaxHelpers(isModule);
+  const { importExpress, importUseModuleViews, importController, routerExport } = getRouterSyntaxHelpers(isModule);
 
   const controllerPath = isApi
     ? `../controllers/api/${prefix}${modelName}.controller`
@@ -42,9 +42,12 @@ module.exports = function createRouter(argv) {
 
   const apiRoutes = `
 ${importExpress}
+${importUseModuleViews}
 ${importController(controllerPath)}
 
 const router = express.Router();
+
+router.use(useModuleViews('${moduleName}'));
 
 // API routes
 router.route('/')
@@ -61,9 +64,12 @@ ${routerExport('router')}
 
   const adminRoutes = `
 ${importExpress}
+${importUseModuleViews}
 ${importController(controllerPath)}
 
 const router = express.Router();
+
+router.use(useModuleViews('${moduleName}'));
 
 // Admin view routes
 router.route('/')
@@ -71,7 +77,6 @@ router.route('/')
   .post(controller.create);
 
 router.get('/create', controller.renderCreate);
-router.get('/dashboard', controller.adminDashboard);
 
 router.route('/:id')
   .get(controller.findById)
@@ -83,9 +88,12 @@ ${routerExport('router')}
 
   const publicRoutes = `
 ${importExpress}
+${importUseModuleViews}
 ${importController(controllerPath)}
 
 const router = express.Router();
+
+router.use(useModuleViews('${moduleName}'));
 
 // Public view routes
 router.get('/', controller.findAll);
