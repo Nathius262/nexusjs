@@ -26,7 +26,7 @@ const storage = new CloudinaryStorage({
     const month = date.toLocaleString('default', { month: 'long' }); // Full month name, e.g., "June"
 
     // Get the section (or folder) from the request
-    const section = req.section || 'sermons'; // Default to 'sermons' if section is not set
+    const section = req.section || 'products'; // Default to 'products' if section is not set
 
     let folderName = `${section}/${year}/${month}`; // Dynamic folder path
     let resourceType = 'auto'; // Default resource type, can be auto, image, raw, or video based on file type

@@ -2,53 +2,43 @@
 
 import { engine } from 'express-handlebars';
 import * as Allow from '@handlebars/allow-prototype-access';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import registerHelpers from './handlebarsHelpers.js';
+import helpers from 'handlebars-helpers'; // Import handlebars-helpers
 
-// Workaround for ES module compatibility
 const allowPrototypeAccess = Allow.allowInsecurePrototypeAccess || Allow.default || Allow;
-
-
-// Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default function configureViewEngine(app) {
-  const rootPath = path.join(__dirname, '..', '..'); // go up to project root
+  const rootPath = path.join(__dirname, '..', '..');
   const globalViewsPath = path.join(rootPath, 'src', 'views');
+  const globalLayoutsPath = path.join(globalViewsPath, 'layouts');
   const globalPartialsPath = path.join(globalViewsPath, 'partials');
-  const layoutsDir = path.join(globalViewsPath, 'layouts');
 
-  const modulesPath = path.join(rootPath, 'src', 'modules');
-  const partialsDirs = [globalPartialsPath];
+  // Allow insecure prototype access
+  const Handlebars = allowPrototypeAccess(HandlebarsLib);
 
-  // Collect module-specific partials
-  fs.readdirSync(modulesPath, { withFileTypes: true }).forEach(dirent => {
-    if (dirent.isDirectory()) {
-      const modulePartialsPath = path.join(modulesPath, dirent.name, 'views', 'partials');
-      if (fs.existsSync(modulePartialsPath)) {
-        partialsDirs.push(modulePartialsPath);
-      }
-    }
-  });
+  // ✅ Register all handlebars-helpers
+  helpers({ handlebars: Handlebars });
 
-  // Collect all valid module views directories
-  const moduleViews = fs.readdirSync(modulesPath, { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => path.join(modulesPath, dirent.name, 'views'))
-    .filter(viewPath => fs.existsSync(viewPath));
+  // ✅ Register custom helpers ON the correct Handlebars instance
+  registerHelpers(Handlebars);
 
-  // Setup Handlebars engine
+
+
+
   app.engine('html', engine({
     extname: '.html',
     defaultLayout: 'main',
-    layoutsDir,
-    partialsDir: partialsDirs,
-    handlebars: allowPrototypeAccess(Handlebars),
+    layoutsDir: globalLayoutsPath,
+    partialsDir: [globalPartialsPath],
+    handlebars: Handlebars,
   }));
 
   app.set('view engine', 'html');
-  app.set('views', [globalViewsPath, ...moduleViews]);
+  app.set('views', globalViewsPath);
 }
