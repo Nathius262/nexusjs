@@ -34,7 +34,7 @@ module.exports = function createService(argv) {
     ? [
         exportFn('create', `async (data) => {
   try {
-    return await ${modelName}.create(data);
+    return await db.${modelName}.create(data);
   } catch (error) {
    console.log(error)
     throw new Error('Error creating record: ' + error.message);
@@ -42,7 +42,7 @@ module.exports = function createService(argv) {
 }`),
         exportFn('update', `async (id, data) => {
   try {
-    const item = await ${modelName}.findByPk(id);
+    const item = await db.${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
     return await item.update(data);
   } catch (error) {
@@ -52,7 +52,7 @@ module.exports = function createService(argv) {
 }`),
         exportFn('destroy', `async (id) => {
   try {
-    const item = await ${modelName}.findByPk(id);
+    const item = await db.${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
     return await item.destroy();
   } catch (error) {
@@ -66,7 +66,7 @@ module.exports = function createService(argv) {
   const commonMethods = [
     exportFn('findAll', `async () => {
   try {
-    return await ${modelName}.findAll();
+    return await db.${modelName}.findAll();
   } catch (error) {
    console.log(error)
     throw new Error('Error fetching records: ' + error.message);
@@ -74,7 +74,7 @@ module.exports = function createService(argv) {
 }`),
     exportFn('findById', `async (id) => {
   try {
-    const item = await ${modelName}.findByPk(id);
+    const item = await db.${modelName}.findByPk(id);
     if (!item) throw new Error('Not found');
     return item;
   } catch (error) {
