@@ -40,12 +40,16 @@ module.exports = function createController(argv) {
   // Shared for both admin and public
   methods.push(
     exportFunction('findAll', `async (req, res) => {
+  const {page, limit, offset} = req.pagination
   try {
-    const data = await service.findAll();
+    const data = await service.findAll({limit, offset});
     res.status(200).render('${isAdmin ? `./admins/${moduleName}_list` : `./${moduleName}_list`}', {
       success: true,
       pageTitle: "${isAdmin ? 'Admin' : ''}",
-      ${moduleName}s: data,
+      ${moduleName}s: data.${moduleName}s,
+      totalItems: data.totalItems,
+      totalPages: data.totalPages,
+      currentPage: page
     });
   } catch (err) {
   console.log(err)

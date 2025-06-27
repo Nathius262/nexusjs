@@ -34,7 +34,7 @@ module.exports = function createRouter(argv) {
   }
 
   const isModule = isESModuleProject();
-  const { importExpress, importUseModuleViews, importController, routerExport } = getRouterSyntaxHelpers(isModule);
+  const { importExpress, importUseModuleViews, importWithPagination, importController, routerExport } = getRouterSyntaxHelpers(isModule);
 
   const controllerPath = isApi
     ? `../controllers/api/${prefix}${modelName}.controller`
@@ -43,6 +43,7 @@ module.exports = function createRouter(argv) {
   const apiRoutes = `
 ${importExpress}
 ${importUseModuleViews}
+${importWithPagination}
 ${importController(controllerPath)}
 
 const router = express.Router();
@@ -51,7 +52,7 @@ router.use(useModuleViews('${moduleName}'));
 
 // API routes
 router.route('/')
-  .get(controller.findAll)
+  .get(withPagination(10), controller.findAll)
   .post(controller.create);
 
 router.route('/:id')
@@ -65,6 +66,7 @@ ${routerExport('router')}
   const adminRoutes = `
 ${importExpress}
 ${importUseModuleViews}
+${importWithPagination}
 ${importController(controllerPath)}
 
 const router = express.Router();
@@ -73,7 +75,7 @@ router.use(useModuleViews('${moduleName}'));
 
 // Admin view routes
 router.route('/')
-  .get(controller.findAll)
+  .get(withPagination(10), controller.findAll)
   .post(controller.create);
 
 router.get('/create', controller.renderCreate);
@@ -89,6 +91,7 @@ ${routerExport('router')}
   const publicRoutes = `
 ${importExpress}
 ${importUseModuleViews}
+${importWithPagination}
 ${importController(controllerPath)}
 
 const router = express.Router();
@@ -96,7 +99,7 @@ const router = express.Router();
 router.use(useModuleViews('${moduleName}'));
 
 // Public view routes
-router.get('/', controller.findAll);
+router.get('/', withPagination(10), controller.findAll);
 router.get('/:id', controller.findById);
 
 ${routerExport('router')}

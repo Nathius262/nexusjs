@@ -51,6 +51,7 @@ function generateAdminListView(moduleName, modelName) {
         </tr>
       {{/each}}
     </tbody>
+    {{> pagination}}
   </table>
   `;
 }
@@ -65,6 +66,7 @@ function generatePublicListView(moduleName, modelName) {
       </li>
     {{/each}}
   </ul>
+  {{> pagination}}
   `;
 }
 

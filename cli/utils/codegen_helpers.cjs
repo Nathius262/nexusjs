@@ -57,6 +57,10 @@ function getRouterSyntaxHelpers(isModule) {
         ? `import useModuleViews from '../../../middlewares/moduleViews.js';`
         : `const useModuleViews = require('../../../middlewares/moduleViews.js');`,
   
+      importWithPagination: isModule
+        ? `import {withPagination} from '../../../middlewares/paginations.js';`
+        : `const {withPagination} = require('../../../middlewares/paginations.js');`,
+  
       importController: (controllerPath) =>
         isModule
           ? `import * as controller from '${controllerPath}.js';`

@@ -64,9 +64,19 @@ module.exports = function createService(argv) {
     : [];
 
   const commonMethods = [
-    exportFn('findAll', `async () => {
+    exportFn('findAll', `async ({limit, offset}) => {
   try {
-    return await db.${modelName}.findAll();
+    const {rows: ${moduleName}s, count: totalItems } = await db.${modelName}.findAndCountAll({
+      limit,
+      offset,
+      distinct:true,
+      order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']],
+    })
+    return {
+      ${moduleName}s,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit)
+    };
   } catch (error) {
    console.log(error)
     throw new Error('Error fetching records: ' + error.message);
