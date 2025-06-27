@@ -42,7 +42,7 @@ module.exports = function createController(argv) {
     exportFunction('findAll', `async (req, res) => {
   try {
     const data = await service.findAll();
-    res.status(200).render('${isAdmin ? './admins/list' : './list'}', {
+    res.status(200).render('${isAdmin ? `./admins/${moduleName}_list` : `./${moduleName}_list`}', {
       success: true,
       pageTitle: "${isAdmin ? 'Admin' : ''}",
       ${moduleName}s: data,
@@ -55,10 +55,10 @@ module.exports = function createController(argv) {
     exportFunction('findById', `async (req, res) => {
   try {
     const data = await service.findById(req.params.id);
-    res.status(200).render('${isAdmin ? './admins/update' : './single'}', {
+    res.status(200).render('${isAdmin ? `./admins/${moduleName}_update` : `./${moduleName}_single`}', {
       success: true,
       pageTitle: "${isAdmin ? 'Update Record' : 'Details'}",
-      ${moduleName}: [data],
+      ${moduleName}: data,
     });
   } catch (err) {
     res.status(404).render('error', { error: err.message });
@@ -98,7 +98,7 @@ module.exports = function createController(argv) {
 
       exportFunction('renderCreate', `async (req, res) => {
   try {
-    res.status(200).render('./admins/create', {
+    res.status(200).render('./admins/${moduleName}_create', {
       pageTitle: "Create ${modelName}"
     });
   } catch (err) {

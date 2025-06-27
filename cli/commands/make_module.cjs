@@ -8,6 +8,7 @@ const makeController = require('./make_controller.cjs');
 const makeRouter = require('./make_router.cjs');
 const makeService = require('./make_service.cjs');
 const makeAdmin = require('./make_admin.cjs');
+const makeView = require('./make_view.cjs');
 const makeApiController = require('./make_api_controller.cjs');
 
 const ensureDir = (dir) => {
@@ -16,10 +17,11 @@ const ensureDir = (dir) => {
 
 module.exports = function createModule(argv) {
   const args = minimist(argv, {
-    boolean: ['m', 'c', 'r', 's'],
+    boolean: ['m', 'c', 'r', 's', 'v'],
     alias: {
       m: 'model',
       c: 'controller',
+      v: 'view',
       r: 'router',
       s: 'service'
     }
@@ -66,6 +68,11 @@ module.exports = function createModule(argv) {
     } else {
       makeController(controllerArgs);
     }
+  }
+  
+  if (args.v) {
+    console.log(`🌐 Generating View`);
+    makeView([moduleName, ...(isAdmin ? ['--admin'] : [])]);
   }
 
   if (args.r) {

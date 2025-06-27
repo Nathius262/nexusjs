@@ -9,11 +9,7 @@
     "dev": "nodemon ./src/core/server.js"
   },
   "main": "dist/cjs/index.js",
-  "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js",
-    "/cli/utils/codegen_helpers": "./cli/utils/codegen_helpers.cjs"
-  },
+ 
   "type": "commonjs",
   "bin": {
     "nexus": "./dist/nexus-cli.js"
