@@ -1,8 +1,12 @@
 <section class="container">
 	<div class="mt-5 pt-5 text-dark">
-		<h2 class="h1 mb-5"><span class="text-danger">500 Error</span>: {{message}}</h2>
+		<h2 class="h1 mb-5"><span class="text-danger">500 Error</span>: {{error}}</h2>
 		<h2 class="lead h2">
     		<p class="fw-bold">{{error}}</p>
+
+			<p class="fw-bold"> {{error.message}}</p>
+			
+			<p class="fw-bold"> {{message}}</p>
 
 			<p>Here are a few things you can try:</p>
 			<ul>

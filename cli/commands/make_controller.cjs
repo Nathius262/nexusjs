@@ -48,7 +48,7 @@ module.exports = function createController(argv) {
       ${moduleName}s: data,
     });
   } catch (err) {
-    res.status(500).render('error', { error: err.message });
+    res.status(500).render('errors/500', { error: err });
   }
 }`),
 
@@ -61,7 +61,7 @@ module.exports = function createController(argv) {
       ${moduleName}: data,
     });
   } catch (err) {
-    res.status(404).render('error', { error: err.message });
+    res.status(404).render('errors/404', { error: err });
   }
 }`)
   );
@@ -74,7 +74,7 @@ module.exports = function createController(argv) {
     const data = await service.create(req.body);
     res.status(201).json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err });
   }
 }`),
 
@@ -83,7 +83,7 @@ module.exports = function createController(argv) {
     const data = await service.update(req.params.id, req.body);
     res.status(200).json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err });
   }
 }`),
 
@@ -92,7 +92,7 @@ module.exports = function createController(argv) {
     const data = await service.destroy(req.params.id);
     res.status(200).json({ success: true, message: 'Deleted successfully', data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err });
   }
 }`),
 
@@ -102,7 +102,7 @@ module.exports = function createController(argv) {
       pageTitle: "Create ${modelName}"
     });
   } catch (err) {
-    res.status(500).render('error', { error: err.message });
+    res.status(500).render('errors/500', { error: err });
   }
 }`),
     );
