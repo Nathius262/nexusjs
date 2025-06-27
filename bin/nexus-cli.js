@@ -21,6 +21,7 @@ const commands = {
   "make-seeder": "make_seeder.js",
   "make-service": "make_service.js",
   "make-router": "make_router.js",
+  "make-view": "make_view.js",
   "make-controller": "make_controller.js",
   "migrations": "migration.js",
   "migrations-debug": "migration_debug.js",
@@ -34,7 +35,7 @@ const args = minimist(rawArgs);
 const command = args._[0]; // First positional arg = command
 
 // Handle --version
-if (args.version || args.v) {
+if (args.version) {
   console.log(`🚀 Nexus CLI version: ${packageJson.version}`);
   process.exit(0);
 }

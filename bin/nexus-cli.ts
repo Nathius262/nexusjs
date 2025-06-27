@@ -42,6 +42,7 @@ async function main() {
     "make-migration": string;
     "make-seeder": string;
     "make-service": string;
+    "make-view": string;
     "make-router": string;
     "make-controller": string;
     migrations: string;
@@ -56,6 +57,7 @@ async function main() {
     "make-migration": "make_migration.cjs",
     "make-seeder": "make_seeder.cjs",
     "make-service": "make_service.cjs",
+    "make-view": "make_view.cjs",
     "make-router": "make_router.cjs",
     "make-controller": "make_controller.cjs",
     migrations: "migration.cjs",
@@ -68,7 +70,7 @@ async function main() {
   const args = minimist(rawArgs);
   const command = args._[0] as keyof CommandType;
 
-  if (args.version || args.v) {
+  if (args.version) {
     console.log(`🚀 Nexus CLI version: ${packageJson.version}`);
     process.exit(0);
   }
@@ -80,7 +82,7 @@ Usage: nexus <command> [options]
 Available Commands:`);
     Object.keys(commands).forEach(cmd => console.log(`   - nexus ${cmd}`));
     console.log(`\nOptions:
-  --version, -v   Show CLI version
+  --version,   Show CLI version
   --help, -h      Show CLI help\n`);
     process.exit(0);
   }
