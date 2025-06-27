@@ -36,6 +36,7 @@ module.exports = function createService(argv) {
   try {
     return await ${modelName}.create(data);
   } catch (error) {
+   console.log(error)
     throw new Error('Error creating record: ' + error.message);
   }
 }`),
@@ -45,6 +46,7 @@ module.exports = function createService(argv) {
     if (!item) throw new Error('Not found');
     return await item.update(data);
   } catch (error) {
+   console.log(error)
     throw new Error('Error updating record: ' + error.message);
   }
 }`),
@@ -54,6 +56,7 @@ module.exports = function createService(argv) {
     if (!item) throw new Error('Not found');
     return await item.destroy();
   } catch (error) {
+   console.log(error)
     throw new Error('Error deleting record: ' + error.message);
   }
 }`),
@@ -65,6 +68,7 @@ module.exports = function createService(argv) {
   try {
     return await ${modelName}.findAll();
   } catch (error) {
+   console.log(error)
     throw new Error('Error fetching records: ' + error.message);
   }
 }`),
@@ -74,6 +78,7 @@ module.exports = function createService(argv) {
     if (!item) throw new Error('Not found');
     return item;
   } catch (error) {
+   console.log(error)
     throw new Error('Error fetching record: ' + error.message);
   }
 }`),
